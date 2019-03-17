@@ -5,28 +5,27 @@ from nltk import regexp_tokenize
 from nltk.tokenize import sent_tokenize
 
 
-file_list = os.listdir("./")
+file_list = os.listdir("./data")
 
 for file in file_list:
 	if not file.endswith(".txt"):
 		continue
 	content = ""
 	array = []
-	with open("./"+file, "r", encoding="utf-8") as f:
+	with open("./data/"+file, "r", encoding="utf-8") as f:
 		print(file)
 		content = f.read()
 		tokens=nltk.word_tokenize(content)
 		
-		en = nltk.Text(tokens)
-		plt.figure(figsize=(20, 8))
+		en = nltk.FreqDist(tokens)
 		plt.ion()
-		en.plot(100)
+		plt.figure(figsize=(20, 8))
+		en.plot(100,title=file)
 		plt.savefig('./result/'+file+'.png')
 		plt.ioff()
 		plt.show()
-
-		for x in set(en.tokens):
-			array.append((x,en.count(str(x))))
+		for x in en.most_common():
+			array.append(x)
 
 		array = sorted(array,key=lambda x:(-int(x[1]),x[0]))
 		f.close()
